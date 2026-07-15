@@ -5,12 +5,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Coffee, Mail } from "lucide-react";
 
 export default function Onboarding() {
-  const { user, merchant, isPlatformAdmin, loading, signOut } = useAuth();
+  const { user, merchant, isPlatformAdmin, isSales, loading, signOut } = useAuth();
 
   if (loading) return null;
   if (!user) return <Navigate to="/auth" replace />;
   if (merchant) return <Navigate to="/dashboard" replace />;
   if (isPlatformAdmin) return <Navigate to="/admin/merchants" replace />;
+  if (isSales) return <Navigate to="/sales" replace />;
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[var(--gradient-warm)] p-4">

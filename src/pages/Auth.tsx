@@ -35,8 +35,30 @@ export default function Auth() {
   const { user } = useAuth();
 
   useEffect(() => {
-    if (user) navigate(nextPath, { replace: true });
-  }, [user, navigate, nextPath]);
+    if (!user) return;
+    let cancelled = false;
+    (async () => {
+      // Sales users (platform_roles.role === "sales") land on the sales console,
+      // unless an explicit ?next= target was provided.
+      if (!params.get("next")) {
+        const { data: salesRow } = await supabase
+          .from("platform_roles")
+          .select("role")
+          .eq("user_id", user.id)
+          .eq("role", "sales")
+          .maybeSingle();
+        if (cancelled) return;
+        if (salesRow) {
+          navigate("/sales", { replace: true });
+          return;
+        }
+      }
+      navigate(nextPath, { replace: true });
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [user, navigate, nextPath, params]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,11 +87,9 @@ export default function Auth() {
           if (signInErr) throw signInErr;
         }
         toast({ title: "Hoş geldiniz!", description: "Hesabınız oluşturuldu." });
-        navigate(nextPath, { replace: true });
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        navigate(nextPath, { replace: true });
       }
     } catch (err: any) {
       const msg = err?.message || "Bir hata oluştu";
@@ -90,7 +110,7 @@ export default function Auth() {
           <div className="flex h-9 w-9 items-center justify-center rounded-md bg-primary text-primary-foreground">
             <Coffee className="h-5 w-5" />
           </div>
-          <span className="text-lg font-semibold tracking-tight">Sadakat Cüzdanı</span>
+          <span className="text-lg font-semibold tracking-tight">TapTapWallet</span>
         </Link>
 
         <Card className="shadow-[var(--shadow-elevated)]">

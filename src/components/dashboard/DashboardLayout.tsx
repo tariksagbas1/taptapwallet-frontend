@@ -121,7 +121,7 @@ function AppSidebar() {
 }
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
-  const { user, merchant, isPlatformAdmin, isOwnerLike, isStaffLike, loading } = useAuth();
+  const { user, merchant, isPlatformAdmin, isSales, isOwnerLike, isStaffLike, loading } = useAuth();
   const location = useLocation();
 
   if (loading) {
@@ -133,7 +133,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   }
   if (!user) return <Navigate to="/auth" state={{ from: location }} replace />;
   if (!merchant) {
-    return <Navigate to={isPlatformAdmin ? "/admin/merchants" : "/onboarding"} replace />;
+    return <Navigate to={isPlatformAdmin ? "/admin/merchants" : isSales ? "/sales" : "/onboarding"} replace />;
   }
   // Staff/manager (without owner/admin rights) belong in the staff console, not the owner dashboard.
   if (isStaffLike && !isOwnerLike && !isPlatformAdmin) {

@@ -33,6 +33,9 @@ import AdminLayout from "./components/admin/AdminLayout";
 import AdminMerchants from "./pages/admin/Merchants";
 import NewMerchant from "./pages/admin/NewMerchant";
 import AdminInvites from "./pages/admin/Invites";
+import SalesLayout from "./pages/sales/SalesLayout";
+import Sales from "./pages/sales/Sales";
+import StartOnboardingMerchant from "./pages/sales/StartOnboardingMerchant";
 import Unsubscribe from "./pages/Unsubscribe";
 import UserAgreement from "./pages/UserAgreement";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -78,6 +81,8 @@ const App = () => (
             <Route path="/admin/merchants" element={<AdminLayout><AdminMerchants /></AdminLayout>} />
             <Route path="/admin/merchants/new" element={<AdminLayout><NewMerchant /></AdminLayout>} />
             <Route path="/admin/invites" element={<AdminLayout><AdminInvites /></AdminLayout>} />
+            <Route path="/sales" element={<SalesLayout><Sales /></SalesLayout>} />
+            <Route path="/sales/onboarding/new" element={<SalesLayout><StartOnboardingMerchant /></SalesLayout>} />
             <Route path="/unsubscribe" element={<Unsubscribe />} />
             <Route path="/user-agreement" element={<UserAgreement />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />

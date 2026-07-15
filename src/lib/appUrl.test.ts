@@ -11,9 +11,9 @@ describe("absoluteAppUrl", () => {
   });
 
   it("includes BASE_URL prefix for GitHub Pages subpath", () => {
-    vi.stubEnv("BASE_URL", "/WalletCo-frontend/");
+    vi.stubEnv("BASE_URL", "/taptapwallet-frontend/");
     expect(absoluteAppUrl("/join/cafe/stamp")).toBe(
-      "https://tariksagbas1.github.io/WalletCo-frontend/join/cafe/stamp",
+      "https://tariksagbas1.github.io/taptapwallet-frontend/join/cafe/stamp",
     );
   });
 

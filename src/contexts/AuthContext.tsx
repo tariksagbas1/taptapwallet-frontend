@@ -21,6 +21,7 @@ interface AuthContextValue {
   isOwnerLike: boolean; // owner/admin → can use business dashboard
   isStaffLike: boolean; // staff/manager → belongs in staff console
   isPlatformAdmin: boolean;
+  isSales: boolean; // platform_roles.role === "sales" → sales console
   loading: boolean;
   refreshMerchant: () => Promise<void>;
   signOut: () => Promise<void>;
@@ -37,6 +38,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [merchant, setMerchant] = useState<MerchantContext | null>(null);
   const [roles, setRoles] = useState<AppRole[]>([]);
   const [isPlatformAdmin, setIsPlatformAdmin] = useState(false);
+  const [isSales, setIsSales] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const loadMerchantAndRoles = async (userId: string) => {
@@ -57,14 +59,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setRoles(rows.filter((r) => r.merchant_id === merchantId).map((r) => r.role as AppRole));
   };
 
-  const loadPlatformAdmin = async (userId: string) => {
-    const { data: platformAdmin } = await supabase
+  const loadPlatformRoles = async (userId: string) => {
+    const { data } = await supabase
       .from("platform_roles")
       .select("role")
-      .eq("user_id", userId)
-      .eq("role", "admin")
-      .maybeSingle();
-    setIsPlatformAdmin(!!platformAdmin);
+      .eq("user_id", userId);
+    const platformRoles = (data ?? []).map((r: any) => r.role as string);
+    setIsPlatformAdmin(platformRoles.includes("admin"));
+    setIsSales(platformRoles.includes("sales"));
   };
 
   useEffect(() => {
@@ -74,12 +76,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (newSession?.user) {
         setTimeout(() => {
           loadMerchantAndRoles(newSession.user.id);
-          loadPlatformAdmin(newSession.user.id);
+          loadPlatformRoles(newSession.user.id);
         }, 0);
       } else {
         setMerchant(null);
         setRoles([]);
         setIsPlatformAdmin(false);
+        setIsSales(false);
       }
     });
 
@@ -96,12 +99,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setMerchant(null);
         setRoles([]);
         setIsPlatformAdmin(false);
+        setIsSales(false);
         setLoading(false);
         return;
       }
       setSession(existing);
       setUser(validUser);
-      Promise.all([loadMerchantAndRoles(validUser.id), loadPlatformAdmin(validUser.id)])
+      Promise.all([loadMerchantAndRoles(validUser.id), loadPlatformRoles(validUser.id)])
         .finally(() => setLoading(false));
     });
 
@@ -117,6 +121,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setMerchant(null);
     setRoles([]);
     setIsPlatformAdmin(false);
+    setIsSales(false);
   };
 
   const value = useMemo<AuthContextValue>(() => {
@@ -131,9 +136,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       session, user, merchant, roles, primaryRole,
       isOwnerLike: roles.some((r) => OWNER_LIKE.includes(r)),
       isStaffLike: roles.some((r) => STAFF_LIKE.includes(r)) && !roles.some((r) => OWNER_LIKE.includes(r)),
-      isPlatformAdmin, loading, refreshMerchant, signOut,
+      isPlatformAdmin, isSales, loading, refreshMerchant, signOut,
     };
-  }, [session, user, merchant, roles, isPlatformAdmin, loading]);
+  }, [session, user, merchant, roles, isPlatformAdmin, isSales, loading]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
