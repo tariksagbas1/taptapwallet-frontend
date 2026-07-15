@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Wallet Loyalty design system — warm, café-inspired, premium minimal.
+   All colors HSL. */
+
+@layer base {
+  :root {
+    --background: 36 33% 97%;
+    --foreground: 25 25% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 25 25% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 25 25% 12%;
+    --primary: 25 55% 22%;
+    --primary-foreground: 36 33% 97%;
+    --primary-glow: 25 50% 35%;
+    --secondary: 32 30% 92%;
+    --secondary-foreground: 25 25% 18%;
+    --accent: 18 75% 55%;
+    --accent-foreground: 36 33% 97%;
+    --muted: 36 20% 93%;
+    --muted-foreground: 25 12% 42%;
+    --destructive: 0 70% 45%;
+    --destructive-foreground: 36 33% 97%;
+    --success: 142 50% 35%;
+    --success-foreground: 36 33% 97%;
+    --border: 32 18% 88%;
+    --input: 32 18% 88%;
+    --ring: 25 55% 22%;
+    --radius: 0.75rem;
+    --sidebar-background: 25 35% 14%;
+    --sidebar-foreground: 36 30% 90%;
+    --sidebar-primary: 18 75% 55%;
+    --sidebar-primary-foreground: 36 33% 97%;
+    --sidebar-accent: 25 30% 20%;
+    --sidebar-accent-foreground: 36 33% 97%;
+    --sidebar-border: 25 25% 22%;
+    --sidebar-ring: 18 75% 55%;
+    --gradient-warm: linear-gradient(135deg, hsl(36 33% 97%), hsl(32 30% 92%));
+    --gradient-brand: linear-gradient(135deg, hsl(25 55% 22%), hsl(18 75% 55%));
+    --shadow-card: 0 1px 3px hsl(25 25% 12% / 0.04), 0 4px 12px hsl(25 25% 12% / 0.04);
+    --shadow-elevated: 0 4px 20px hsl(25 25% 12% / 0.08);
+  }
+
+  .dark {
+    --background: 25 25% 8%;
+    --foreground: 36 30% 92%;
+    --card: 25 22% 11%;
+    --card-foreground: 36 30% 92%;
+    --popover: 25 22% 11%;
+    --popover-foreground: 36 30% 92%;
+    --primary: 18 75% 55%;
+    --primary-foreground: 25 25% 8%;
+    --secondary: 25 18% 16%;
+    --secondary-foreground: 36 30% 92%;
+    --accent: 18 75% 55%;
+    --accent-foreground: 25 25% 8%;
+    --muted: 25 18% 16%;
+    --muted-foreground: 36 12% 60%;
+    --destructive: 0 65% 50%;
+    --destructive-foreground: 36 30% 92%;
+    --success: 142 50% 45%;
+    --success-foreground: 25 25% 8%;
+    --border: 25 18% 18%;
+    --input: 25 18% 18%;
+    --ring: 18 75% 55%;
+    --sidebar-background: 25 25% 6%;
+    --sidebar-foreground: 36 30% 88%;
+    --sidebar-primary: 18 75% 55%;
+    --sidebar-primary-foreground: 25 25% 8%;
+    --sidebar-accent: 25 22% 12%;
+    --sidebar-accent-foreground: 36 30% 88%;
+    --sidebar-border: 25 22% 15%;
+    --sidebar-ring: 18 75% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv11", "ss01";
+  }
+  h1, h2, h3, h4 {
+    @apply tracking-tight;
+  }
+}

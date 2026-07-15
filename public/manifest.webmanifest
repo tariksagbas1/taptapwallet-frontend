@@ -1,0 +1,19 @@
+{
+  "name": "Sadakat Kasa",
+  "short_name": "Kasa",
+  "description": "Sadakat Cüzdanı kasa konsolu",
+  "start_url": "/staff",
+  "scope": "/staff",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4A2F1F",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
