@@ -25,7 +25,7 @@ export default function Onboarding() {
           <CardHeader>
             <CardTitle>Hesabınız henüz bir işletmeye bağlı değil</CardTitle>
             <CardDescription>
-              WalletCo paneli yalnızca davet ile açılır. Sizinle anlaştığımız e-posta adresine bir
+              TapTapWallet paneli yalnızca davet ile açılır. Sizinle anlaştığımız e-posta adresine bir
               davet bağlantısı gönderildiyse oraya tıklayarak panele girebilirsiniz.
             </CardDescription>
           </CardHeader>
@@ -35,7 +35,7 @@ export default function Onboarding() {
               <div className="space-y-1">
                 <div className="font-medium">{user.email}</div>
                 <div className="text-muted-foreground">
-                  Davet henüz gelmediyse lütfen bizimle iletişime geçin. WalletCo aboneliği uygulama
+                  Davet henüz gelmediyse lütfen bizimle iletişime geçin. TapTapWallet aboneliği uygulama
                   dışında düzenlenir.
                 </div>
               </div>

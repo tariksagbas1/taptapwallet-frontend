@@ -12,11 +12,11 @@ const Index = () => {
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-2">
             <img
-              src={`${import.meta.env.BASE_URL}walletco-logo.png`}
-              alt="WalletCo"
+              src={`${import.meta.env.BASE_URL}taptapwallet-logo.png`}
+              alt="TapTapWallet"
               className="h-8 w-8 rounded-md object-contain"
             />
-            <span className="font-semibold tracking-tight">WalletCo</span>
+            <span className="font-semibold tracking-tight">TapTapWallet</span>
           </div>
           <nav className="flex items-center gap-2">
             {user ? (
@@ -112,7 +112,7 @@ const Index = () => {
             Destek
           </Link>
         </div>
-        <p className="mt-4">© {new Date().getFullYear()} WalletCo — Türkiye&apos;de tasarlandı</p>
+        <p className="mt-4">© {new Date().getFullYear()} TapTapWallet — Türkiye&apos;de tasarlandı</p>
       </footer>
     </div>
   );

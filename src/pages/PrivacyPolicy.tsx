@@ -3,14 +3,14 @@ import { LegalPageLayout } from "@/components/LegalPageLayout";
 const PrivacyPolicy = () => (
   <LegalPageLayout title="Gizlilik Politikası">
     <p>
-      Bu politika, WalletCo sadakat kartı hizmeti kapsamında hangi kişisel verilerin toplandığını,
+      Bu politika, TapTapWallet sadakat kartı hizmeti kapsamında hangi kişisel verilerin toplandığını,
       nasıl kullanıldığını ve nasıl korunduğunu açıklar. 6698 sayılı Kişisel Verilerin Korunması
       Kanunu (&quot;KVKK&quot;) kapsamında hazırlanmıştır.
     </p>
 
     <h2>1. Veri sorumlusu</h2>
     <p>
-      WalletCo hizmeti kapsamında kişisel verileriniz, hizmeti sunan tarafça veri sorumlusu sıfatıyla
+      TapTapWallet hizmeti kapsamında kişisel verileriniz, hizmeti sunan tarafça veri sorumlusu sıfatıyla
       işlenmektedir. İletişim:{" "}
       <a href="mailto:destek@walletco.app" className="text-primary hover:underline">
         destek@walletco.app

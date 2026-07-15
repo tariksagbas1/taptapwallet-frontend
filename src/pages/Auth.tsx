@@ -159,7 +159,7 @@ export default function Auth() {
             )}
             {!signupAllowed && (
               <div className="mt-6 text-center text-xs text-muted-foreground">
-                WalletCo paneli yalnızca davet ile açılır. Davet bağlantınız üzerinden devam edin.
+                TapTapWallet paneli yalnızca davet ile açılır. Davet bağlantınız üzerinden devam edin.
               </div>
             )}
           </CardContent>

@@ -50,7 +50,7 @@ export default function Unsubscribe() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>E-posta aboneliği</CardTitle>
-          <CardDescription>WalletCo e-posta tercihleri</CardDescription>
+          <CardDescription>TapTapWallet e-posta tercihleri</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {state === "loading" && (

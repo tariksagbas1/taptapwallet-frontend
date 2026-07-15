@@ -4,7 +4,7 @@ import { LegalPageLayout } from "@/components/LegalPageLayout";
 const Support = () => (
   <LegalPageLayout title="Destek">
     <p>
-      WalletCo ile ilgili sorularınız, teknik problemleriniz veya geri bildirimleriniz için bizimle
+      TapTapWallet ile ilgili sorularınız, teknik problemleriniz veya geri bildirimleriniz için bizimle
       iletişime geçebilirsiniz.
     </p>
 

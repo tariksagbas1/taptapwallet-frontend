@@ -3,13 +3,13 @@ import { LegalPageLayout } from "@/components/LegalPageLayout";
 const UserAgreement = () => (
   <LegalPageLayout title="Kullanıcı Sözleşmesi">
     <p>
-      Bu sözleşme, WalletCo adlı sadakat kartı hizmetini (&quot;Hizmet&quot;) kullanan işletmeler ve
+      Bu sözleşme, TapTapWallet adlı sadakat kartı hizmetini (&quot;Hizmet&quot;) kullanan işletmeler ve
       ilgili personel için geçerlidir. Hizmeti kullanarak bu koşulları kabul etmiş sayılırsınız.
     </p>
 
     <h2>1. Hizmetin tanımı</h2>
     <p>
-      WalletCo; kafe, restoran ve benzeri işletmelerin müşterilerine Apple Wallet üzerinden dijital
+      TapTapWallet; kafe, restoran ve benzeri işletmelerin müşterilerine Apple Wallet üzerinden dijital
       sadakat kartı sunmasını sağlayan bir platformdur. İşletmeler web paneli üzerinden hesap
       oluşturur, sadakat programlarını belirler ve müşteri verilerini yönetir. Mobil uygulama yalnızca
       işletme personelinin müşteri kartlarındaki QR kodu okutarak damga basması amacıyla kullanılır.
@@ -26,19 +26,19 @@ const UserAgreement = () => (
     <h2>3. Müşteriler</h2>
     <p>
       Son müşteriler, işletmenizin QR kodunu okutarak sadakat kartını Apple Wallet&apos;a ekler. Kart
-      kullanımı ve ödül koşulları işletmeniz ile müşteri arasındaki ilişkiye tabidir; WalletCo bu
+      kullanımı ve ödül koşulları işletmeniz ile müşteri arasındaki ilişkiye tabidir; TapTapWallet bu
       ilişkinin tarafı değildir.
     </p>
 
     <h2>4. Hizmet değişiklikleri</h2>
     <p>
-      WalletCo, hizmeti geliştirmek veya yasal yükümlülüklere uymak amacıyla özellikleri
+      TapTapWallet, hizmeti geliştirmek veya yasal yükümlülüklere uymak amacıyla özellikleri
       güncelleyebilir veya değiştirebilir. Önemli değişiklikler web sitesi üzerinden duyurulur.
     </p>
 
     <h2>5. Sorumluluk sınırı</h2>
     <p>
-      Hizmet &quot;olduğu gibi&quot; sunulur. WalletCo, işletmeniz ile müşterileriniz arasındaki
+      Hizmet &quot;olduğu gibi&quot; sunulur. TapTapWallet, işletmeniz ile müşterileriniz arasındaki
       ticari ilişkiden, ödül uygulamalarından veya hizmetin geçici olarak kullanılamamasından
       doğan dolaylı zararlardan sorumlu tutulamaz.
     </p>

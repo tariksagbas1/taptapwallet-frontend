@@ -59,8 +59,8 @@ export default function ProgramEditor() {
     reset_after_redeem: true,
     max_stamps_per_day: 3,
     cooldown_minutes: 30,
-    primary: "#3b2415",
-    secondary: "#d6803a",
+    primary: "#566c86",
+    secondary: "#7f8b55",
   });
 
   useEffect(() => {
@@ -90,8 +90,8 @@ export default function ProgramEditor() {
             reset_after_redeem: rule.reset_after_redeem ?? true,
             max_stamps_per_day: rule.max_stamps_per_day ?? 3,
             cooldown_minutes: rule.cooldown_minutes ?? 30,
-            primary: prog.brand_primary_color ?? "#3b2415",
-            secondary: prog.brand_secondary_color ?? "#d6803a",
+            primary: prog.brand_primary_color ?? "#566c86",
+            secondary: prog.brand_secondary_color ?? "#7f8b55",
           });
           setSelectedLocs((prog.program_locations ?? []).map((pl: any) => pl.location_id));
         }

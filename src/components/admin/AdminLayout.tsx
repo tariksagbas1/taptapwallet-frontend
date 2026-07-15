@@ -32,7 +32,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             <Shield className="h-4 w-4" />
           </div>
           <div className="min-w-0">
-            <div className="truncate text-sm font-semibold">WalletCo Admin</div>
+            <div className="truncate text-sm font-semibold">TapTapWallet Admin</div>
             <div className="truncate text-xs text-muted-foreground">{user.email}</div>
           </div>
         </div>
