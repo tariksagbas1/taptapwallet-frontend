@@ -4,11 +4,10 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
-// GitHub project Pages are served from /repo-name/, not site root.
-const repoBase = process.env.GITHUB_PAGES === "true" ? "/WalletCo-frontend/" : "/";
-
+// Served from the custom domain taptapwallet.com at the site root, so the base is "/".
+// (A GitHub project-path base like "/taptapwallet-frontend/" 404s assets on the custom domain.)
 export default defineConfig(({ mode }) => ({
-  base: repoBase,
+  base: "/",
   server: {
     host: "::",
     port: 8080,
