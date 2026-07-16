@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 import { Loader2, Plus, Trash2, Upload, Store, Users, Stamp } from "lucide-react";
 import taptapwalletLogo from "@/assets/taptapwallet-logo.png";
@@ -42,6 +43,13 @@ interface StaffRow {
   confirmPassword: string;
 }
 
+interface SpecialProgram {
+  id: string;
+  name: string;
+  category: string | null;
+  stamp_threshold: number;
+}
+
 function fileToBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -61,6 +69,7 @@ function WalletPreview({
   secondary,
   threshold,
   qrSrc,
+  stripSrc,
 }: {
   logoSrc: string;
   businessName: string;
@@ -68,7 +77,13 @@ function WalletPreview({
   secondary: string;
   threshold: number;
   qrSrc: string;
+  stripSrc: string | null;
 }) {
+  const [stripFailed, setStripFailed] = useState(false);
+  useEffect(() => {
+    setStripFailed(false);
+  }, [stripSrc]);
+
   return (
     <div
       className="mx-auto flex aspect-[3/4] w-full max-w-[320px] flex-col rounded-3xl p-5 shadow-lg"
@@ -81,8 +96,19 @@ function WalletPreview({
         <div className="min-w-0 truncate text-base font-semibold text-white">{businessName}</div>
       </div>
 
-      {/* Reserved empty space for the loyalty strip image (rendered later). */}
-      <div className="flex-1" />
+      {/* Loyalty strip image for the selected special program (empty when none). */}
+      {stripSrc && !stripFailed ? (
+        <div className="flex flex-1 items-center justify-center py-3">
+          <img
+            src={stripSrc}
+            alt=""
+            className="max-h-full w-full rounded-md object-contain"
+            onError={() => setStripFailed(true)}
+          />
+        </div>
+      ) : (
+        <div className="flex-1" />
+      )}
 
       <div className="flex items-end justify-between">
         <div className="min-w-0">
@@ -95,7 +121,7 @@ function WalletPreview({
           <div className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: secondary }}>
             Damga
           </div>
-          <div className="mt-1 text-base font-semibold text-white">0/{threshold}</div>
+          <div className="mt-1 text-base font-semibold text-white">1/{threshold}</div>
         </div>
       </div>
 
@@ -139,6 +165,46 @@ export default function StartOnboardingMerchant() {
   });
 
   const [loading, setLoading] = useState(false);
+
+  // Special programs (optional preset that drives the stamp threshold)
+  const [specialPrograms, setSpecialPrograms] = useState<SpecialProgram[]>([]);
+  const [specialProgramId, setSpecialProgramId] = useState<string>("none");
+  const [stripUrl, setStripUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const { data, error } = await (supabase as any)
+        .from("special_programs")
+        .select("id, name, category, stamp_threshold")
+        .order("name");
+      if (!cancelled && !error && data) setSpecialPrograms(data as SpecialProgram[]);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const onSelectSpecialProgram = (value: string) => {
+    setSpecialProgramId(value);
+    const sp = specialPrograms.find((p) => p.id === value);
+    if (sp) setProgram((prev) => ({ ...prev, threshold: sp.stamp_threshold }));
+
+    if (value === "none") {
+      setStripUrl(null);
+    } else {
+      const { data } = supabase.storage
+        .from("special-program-strips")
+        .getPublicUrl(`${value}/01@2x.png`);
+      setStripUrl(data?.publicUrl ?? null);
+    }
+  };
+
+  const onManualThresholdChange = (raw: string) => {
+    setSpecialProgramId("none");
+    setStripUrl(null);
+    setProgram((prev) => ({ ...prev, threshold: parseInt(raw) || 0 }));
+  };
 
   const onPickLogo = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -215,6 +281,7 @@ export default function StartOnboardingMerchant() {
           cooldown_minutes: program.cooldown_minutes,
           primary_color: program.primary,
           secondary_color: program.secondary,
+          special_program_id: specialProgramId === "none" ? null : specialProgramId,
         },
         logo,
       };
@@ -359,7 +426,7 @@ export default function StartOnboardingMerchant() {
           <div className="grid gap-4 sm:grid-cols-3">
             <div className="space-y-1.5">
               <Label>Damga eşiği *</Label>
-              <Input type="number" min={2} max={50} value={program.threshold} onChange={(e) => setProgram({ ...program, threshold: parseInt(e.target.value) || 0 })} />
+              <Input type="number" min={2} max={50} value={program.threshold} onChange={(e) => onManualThresholdChange(e.target.value)} />
             </div>
             <div className="space-y-1.5">
               <Label>Günlük max damga</Label>
@@ -369,6 +436,26 @@ export default function StartOnboardingMerchant() {
               <Label>Bekleme (dk)</Label>
               <Input type="number" min={0} max={1440} value={program.cooldown_minutes} onChange={(e) => setProgram({ ...program, cooldown_minutes: parseInt(e.target.value) || 0 })} />
             </div>
+          </div>
+          <div className="space-y-1.5">
+            <Label>Özel program (opsiyonel)</Label>
+            <Select value={specialProgramId} onValueChange={onSelectSpecialProgram}>
+              <SelectTrigger>
+                <SelectValue placeholder="Özel program seçin" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">Özel program yok</SelectItem>
+                {specialPrograms.map((sp) => (
+                  <SelectItem key={sp.id} value={sp.id}>
+                    {sp.name}
+                    {sp.category ? ` — ${sp.category}` : ""} · {sp.stamp_threshold} damga
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-muted-foreground">
+              Bir özel program seçilirse damga eşiği otomatik güncellenir.
+            </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
@@ -406,6 +493,7 @@ export default function StartOnboardingMerchant() {
           secondary={program.secondary}
           threshold={program.threshold}
           qrSrc={taptapwalletQr}
+          stripSrc={stripUrl}
         />
       </div>
 
