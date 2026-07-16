@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { QRCodeCanvas } from "qrcode.react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -6,7 +7,8 @@ import { absoluteAppUrl } from "@/lib/appUrl";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
-import { Copy, Download, Loader2, QrCode } from "lucide-react";
+import { Copy, Download, Loader2, QrCode, LayoutTemplate } from "lucide-react";
+import type { QrPosterLocationState } from "./QrPosterDesigner";
 
 interface JoinItem {
   merchantId: string;
@@ -15,10 +17,12 @@ interface JoinItem {
   programSlug: string;
   programName: string;
   joinUrl: string;
+  logoUrl: string | null;
 }
 
 export default function Sales() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState<JoinItem[]>([]);
 
@@ -43,10 +47,10 @@ export default function Sales() {
           return;
         }
 
-        // 2. Merchant slugs (+ names) from the merchants table.
+        // 2. Merchant slugs (+ names + logo) from the merchants table.
         const { data: merchants, error: mErr } = await supabase
           .from("merchants")
-          .select("id, slug, name")
+          .select("id, slug, name, logo_url")
           .in("id", merchantIds);
         if (mErr) throw mErr;
         const merchantById = new Map((merchants ?? []).map((m) => [m.id, m]));
@@ -70,6 +74,7 @@ export default function Sales() {
               programSlug: p.slug,
               programName: p.name ?? p.slug,
               joinUrl: absoluteAppUrl(`/join/${m.slug}/${p.slug}`),
+              logoUrl: m.logo_url ?? null,
             } satisfies JoinItem;
           })
           .filter((x): x is JoinItem => x !== null);
@@ -158,6 +163,25 @@ export default function Sales() {
                 </button>
                 <Button variant="outline" size="sm" className="w-full" onClick={() => downloadQR(i, item)}>
                   <Download className="mr-2 h-4 w-4" /> QR indir
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="w-full"
+                  onClick={() => {
+                    const posterState: QrPosterLocationState = {
+                      joinUrl: item.joinUrl,
+                      merchantName: item.merchantName,
+                      merchantId: item.merchantId,
+                      merchantSlug: item.merchantSlug,
+                      programName: item.programName,
+                      programSlug: item.programSlug,
+                      logoUrl: item.logoUrl,
+                    };
+                    navigate("/sales/poster", { state: posterState });
+                  }}
+                >
+                  <LayoutTemplate className="mr-2 h-4 w-4" /> QR Posteri Hazırla
                 </Button>
               </CardContent>
             </Card>

@@ -62,6 +62,14 @@ function fileToBase64(file: File): Promise<string> {
   });
 }
 
+function previewStampCount(threshold: number): number {
+  return Math.round(threshold * 0.7);
+}
+
+function stripImageFile(stampCount: number): string {
+  return `${String(stampCount).padStart(2, "0")}@2x.png`;
+}
+
 function WalletPreview({
   logoSrc,
   businessName,
@@ -121,7 +129,7 @@ function WalletPreview({
           <div className="text-[10px] font-semibold uppercase tracking-widest" style={{ color: secondary }}>
             Damga
           </div>
-          <div className="mt-1 text-base font-semibold text-white">1/{threshold}</div>
+          <div className="mt-1 text-base font-semibold text-white">{previewStampCount(threshold)}/{threshold}</div>
         </div>
       </div>
 
@@ -192,11 +200,13 @@ export default function StartOnboardingMerchant() {
 
     if (value === "none") {
       setStripUrl(null);
-    } else {
+    } else if (sp) {
       const { data } = supabase.storage
         .from("special-program-strips")
-        .getPublicUrl(`${value}/01@2x.png`);
+        .getPublicUrl(`${value}/${stripImageFile(previewStampCount(sp.stamp_threshold))}`);
       setStripUrl(data?.publicUrl ?? null);
+    } else {
+      setStripUrl(null);
     }
   };
 

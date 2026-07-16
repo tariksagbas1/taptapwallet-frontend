@@ -25,3 +25,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Poster backgrounds live in Supabase Storage (poster-backgrounds bucket)
+src/assets/poster-backgrounds/
+

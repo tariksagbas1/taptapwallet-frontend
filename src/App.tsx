@@ -36,6 +36,7 @@ import AdminInvites from "./pages/admin/Invites";
 import SalesLayout from "./pages/sales/SalesLayout";
 import Sales from "./pages/sales/Sales";
 import StartOnboardingMerchant from "./pages/sales/StartOnboardingMerchant";
+import QrPosterDesigner from "./pages/sales/QrPosterDesigner";
 import Unsubscribe from "./pages/Unsubscribe";
 import UserAgreement from "./pages/UserAgreement";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -83,6 +84,7 @@ const App = () => (
             <Route path="/admin/invites" element={<AdminLayout><AdminInvites /></AdminLayout>} />
             <Route path="/sales" element={<SalesLayout><Sales /></SalesLayout>} />
             <Route path="/sales/onboarding/new" element={<SalesLayout><StartOnboardingMerchant /></SalesLayout>} />
+            <Route path="/sales/poster" element={<SalesLayout><QrPosterDesigner /></SalesLayout>} />
             <Route path="/unsubscribe" element={<Unsubscribe />} />
             <Route path="/user-agreement" element={<UserAgreement />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
