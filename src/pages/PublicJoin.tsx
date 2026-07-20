@@ -178,6 +178,11 @@ export default function PublicJoin() {
     }
   };
 
+  const handleOpenWallet = () => {
+    setWalletAdded(false);
+    window.location.href = "wallet://";
+  };
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     const payload = { ...form, phone: normalizeTurkishPhone(form.phone) };
@@ -278,7 +283,7 @@ export default function PublicJoin() {
                     <Button
                       variant="secondary"
                       className="mt-2 min-w-[7rem] px-8 font-medium"
-                      onClick={() => setWalletAdded(false)}
+                      onClick={handleOpenWallet}
                     >
                       Tamam
                     </Button>
