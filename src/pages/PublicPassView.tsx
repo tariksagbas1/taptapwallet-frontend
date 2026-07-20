@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
-import { Loader2, Apple, Stamp } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { QRCodeCanvas } from "qrcode.react";
+import { Loader2, Apple, Stamp, RefreshCw, Copy } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
 interface PassView {
   id: string;
@@ -13,6 +14,10 @@ interface PassView {
   brand: string | null;
   terms: string | null;
   memberName: string;
+}
+
+function isIOSDevice() {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 }
 
 export default function PublicPassView() {
@@ -66,6 +71,47 @@ export default function PublicPassView() {
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
   const downloadEndpoint = `${supabaseUrl}/functions/v1/pass-download?pass_id=${passId}&token=${token}`;
   const pct = Math.min(100, Math.round((view.stamps / Math.max(1, view.threshold)) * 100));
+  const showAppleWalletButton = isIOSDevice();
+
+  const copyPassLink = async () => {
+    const passUrl = window.location.href;
+
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(passUrl);
+      } else {
+        throw new Error("Clipboard API unavailable");
+      }
+      toast({
+        title: "Link kopyalandı ✓",
+        className:
+          "border-[hsl(var(--success))] bg-[hsl(var(--success))] text-[hsl(var(--success-foreground))]",
+      });
+    } catch {
+      const textarea = document.createElement("textarea");
+      try {
+        textarea.value = passUrl;
+        textarea.style.position = "fixed";
+        textarea.style.left = "-9999px";
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+
+        if (!document.execCommand("copy")) {
+          throw new Error("Fallback copy failed");
+        }
+        toast({
+          title: "Link kopyalandı ✓",
+          className:
+            "border-[hsl(var(--success))] bg-[hsl(var(--success))] text-[hsl(var(--success-foreground))]",
+        });
+      } catch {
+        toast({ title: "Link kopyalanamadı", variant: "destructive" });
+      } finally {
+        textarea.remove();
+      }
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -100,13 +146,47 @@ export default function PublicPassView() {
             <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, backgroundColor: brand }} />
           </div>
 
-          <a
-            href={downloadEndpoint}
-            className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-foreground px-4 py-3 text-base font-medium text-background transition-opacity hover:opacity-90"
-          >
-            <Apple className="h-5 w-5" />
-            Apple Wallet'a Ekle
-          </a>
+          <div className="mt-6 flex flex-col items-center border-t border-border pt-6">
+            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Kasada okutun</p>
+            <div className="mt-3 rounded-xl bg-white p-3 shadow-sm ring-1 ring-border/60">
+              <QRCodeCanvas value={passId!} size={200} level="M" includeMargin={false} />
+            </div>
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="mt-[15px] mb-[3px] flex min-h-11 items-center gap-2 rounded-full border border-border bg-background px-5 py-2.5 text-sm font-medium shadow-sm transition-colors hover:bg-muted active:scale-[0.98]"
+            >
+              <RefreshCw className="h-5 w-5" />
+              Güncelle
+            </button>
+            <p className="mt-3 max-w-[15rem] text-center text-xs text-muted-foreground">
+              Personel bu QR kodu okutarak damga ekler.
+            </p>
+          </div>
+
+          {showAppleWalletButton && (
+            <a
+              href={downloadEndpoint}
+              className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-foreground px-4 py-3 text-base font-medium text-background transition-opacity hover:opacity-90"
+            >
+              <Apple className="h-5 w-5" />
+              Apple Wallet'a Ekle
+            </a>
+          )}
+
+          <div className="mt-6 border-t border-border pt-6 text-center">
+            <p className="text-sm text-muted-foreground">
+              Kartını kolayca kullanmak için bu linki kaydet
+            </p>
+            <button
+              type="button"
+              onClick={copyPassLink}
+              className="mt-3 flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-border bg-background px-5 py-2.5 text-sm font-medium shadow-sm transition-colors hover:bg-muted active:scale-[0.98]"
+            >
+              <Copy className="h-5 w-5" />
+              Linki Kopyala
+            </button>
+          </div>
         </div>
 
         {view.terms && (

@@ -71,6 +71,10 @@ const FormSchema = z.object({
 
 const WALLET_SUCCESS_DELAY_MS = 2500;
 
+function isIOSDevice() {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+}
+
 export default function PublicJoin() {
   const { merchantSlug, programSlug } = useParams<{ merchantSlug: string; programSlug: string }>();
   const [program, setProgram] = useState<ProgramInfo | null>(null);
@@ -247,6 +251,7 @@ export default function PublicJoin() {
   const brand = program.brand_primary_color ?? "hsl(var(--primary))";
   const threshold = program.rule.threshold ?? 10;
   const rewardLabel = program.rule.reward_label ?? "Ödül";
+  const showAppleWalletButton = isIOSDevice();
 
   if (done) {
     return (
@@ -301,19 +306,25 @@ export default function PublicJoin() {
             <span className="font-semibold">{rewardLabel}</span> kazan.
           </p>
 
-          <button
-            type="button"
-            onClick={handleAddToWallet}
-            disabled={addingToWallet}
-            className="mt-10 flex h-14 w-full max-w-sm items-center justify-center gap-3 rounded-2xl bg-foreground px-6 text-lg font-semibold text-background shadow-lg transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70"
-          >
-            <Apple className="h-6 w-6" />
-            Apple Wallet&apos;a Ekle
-          </button>
+          {showAppleWalletButton && (
+            <button
+              type="button"
+              onClick={handleAddToWallet}
+              disabled={addingToWallet}
+              className="mt-10 flex h-14 w-full max-w-sm items-center justify-center gap-3 rounded-2xl bg-foreground px-6 text-lg font-semibold text-background shadow-lg transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70"
+            >
+              <Apple className="h-6 w-6" />
+              Apple Wallet&apos;a Ekle
+            </button>
+          )}
 
           <a
             href={absoluteAppUrl(`/pass/${done.passId}?token=${done.authToken}`)}
-            className="mt-5 text-xs text-muted-foreground/60 underline-offset-2 hover:text-muted-foreground hover:underline"
+            className={
+              showAppleWalletButton
+                ? "mt-5 text-xs text-muted-foreground/60 underline-offset-2 hover:text-muted-foreground hover:underline"
+                : "mt-10 flex h-14 w-full max-w-sm items-center justify-center rounded-2xl bg-foreground px-6 text-lg font-semibold text-background shadow-lg transition-transform hover:scale-[1.02] active:scale-[0.98]"
+            }
           >
             Kartı bağlantıyla aç
           </a>
